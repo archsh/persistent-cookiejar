@@ -56,7 +56,7 @@ func (j *Jar) save(now time.Time) error {
 
 	j.mu.Lock()
 	defer j.mu.Unlock()
-	if err := j.mergeFrom(f); err != nil {
+	if err := j.MergeFrom(f); err != nil {
 		// The cookie file is probably corrupt.
 		log.Printf("cannot read cookie file to merge it; ignoring it: %v", err)
 	}
@@ -92,14 +92,14 @@ func (j *Jar) load() error {
 		return err
 	}
 	defer f.Close()
-	if err := j.mergeFrom(f); err != nil {
+	if err := j.MergeFrom(f); err != nil {
 		return errgo.Mask(err)
 	}
 	return nil
 }
 
-// mergeFrom reads all the cookies from r and stores them in the Jar.
-func (j *Jar) mergeFrom(r io.Reader) error {
+// MergeFrom reads all the cookies from r and stores them in the Jar.
+func (j *Jar) MergeFrom(r io.Reader) error {
 	decoder := json.NewDecoder(r)
 	// Cope with old cookiejar format by just discarding
 	// cookies, but still return an error if it's invalid JSON.
